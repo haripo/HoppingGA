@@ -1,8 +1,6 @@
 
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.event.*;
 
 import javax.swing.JComponent;
 
@@ -38,6 +36,13 @@ public class Canvas extends JComponent {
     }
 
     public void drawCircle(float x, float y, float r) {
+        Graphics graphics = buffer.getGraphics();
+        graphics.drawArc(
+                Math.round((x - r + shiftX) * scale),
+                Math.round((y - r + shiftY) * scale),
+                Math.round(r * scale * 2),
+                Math.round(r * scale * 2),
+                0, 360);
     }
 
     public void drawLine(float x1, float y1, float x2, float y2) {

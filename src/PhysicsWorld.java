@@ -4,6 +4,7 @@ import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.*;
 import org.jbox2d.dynamics.*;
+import org.jbox2d.dynamics.joints.Joint;
 
 public class PhysicsWorld {
     private World world;
@@ -85,6 +86,18 @@ public class PhysicsWorld {
             }
             body = body.getNext();
         }
+
+        Joint joint = world.getJointList();
+        while (joint != null) {
+            Vec2 anchorA = new Vec2();
+            Vec2 anchorB = new Vec2();
+            joint.getAnchorA(anchorA);
+            joint.getAnchorB(anchorB);
+            canvas.drawCircle(anchorA.x, anchorA.y, 0.1f);
+            canvas.drawCircle(anchorB.x, anchorB.y, 0.1f);
+            canvas.drawLine(anchorA.x, anchorA.y, anchorB.x, anchorB.y);
+            joint = joint.getNext();
+        }
     }
 
     public void setMotorSpeed(int individual, int i, int speed) {
@@ -95,7 +108,11 @@ public class PhysicsWorld {
         return individuals.get(individual).getDistance();
     }
 
-    public void step() {
-        world.step(1.0f / 30.0f, 10, 10);
+    public boolean getIsSlipped(int individual) {
+        return individuals.get(individual).getHeight() > 9;
+    }
+
+    public void step(int step_speed) {
+        world.step(1.0f / 30.0f * step_speed, 10, 10);
     }
 }
