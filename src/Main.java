@@ -1,6 +1,8 @@
 import GeneticAlgorithm.SimpleGeneticAlgorithm;
 
 import javax.swing.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Main extends JFrame {
     private Timer timer;
@@ -8,6 +10,7 @@ public class Main extends JFrame {
     private PhysicsWorld world;
 
     private SimpleGeneticAlgorithm ga;
+    private GeneStorage storage;
 
     private int gene_length = 100;
     private int population_size = 20;
@@ -18,11 +21,16 @@ public class Main extends JFrame {
 
     private int tickCount = 0;
     private int gene_index = 0;
+    private int generation = 0;
 
     public Main() {
         ga = new SimpleGeneticAlgorithm(
                 population_size, gene_length, mutation_rate, crossover_rate);
         ga.randomInitialize();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "'hoppingGA_'yyyymmdd'_'HHmmss'.log'");
+        storage = new GeneStorage(dateFormat.format(new Date()));
         InitFrame();
     }
 
@@ -65,6 +73,7 @@ public class Main extends JFrame {
 
         if(tickCount > 30 * 50) {
             tickCount = 0;
+            generation += 1;
 
             int[] fitnesses = new int[population_size];
             average_fitness = 0;
@@ -78,10 +87,11 @@ public class Main extends JFrame {
             }
             average_fitness /= fitnesses.length;
             System.out.println("ave: " + average_fitness + " best: " + best_fitness);
-//            for(int i = 0; i < population_size; i++) {
-//                System.out.println("index: " + i + " fitness: " + fitnesses[i]);
-//                System.out.println(Arrays.toString(genes[i]));
-//            }
+
+            // save log
+            for (int i = 0; i < population_size; i++) {
+                storage.save(generation, fitnesses[i], genes[i]);
+            }
 
             ga.generateNext(fitnesses);
 

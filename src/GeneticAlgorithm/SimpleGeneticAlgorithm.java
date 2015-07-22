@@ -126,7 +126,6 @@ public class SimpleGeneticAlgorithm {
                 best = i;
             }
         }
-        System.out.println("!ELITE: " + best);
         return genes[best].clone();
     }
 
