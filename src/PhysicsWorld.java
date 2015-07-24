@@ -47,9 +47,8 @@ public class PhysicsWorld {
 
     public void removeAllIndividuals() {
         for (Individual individual : individuals) {
-            for (Body body : individual.getBodies()) {
-                world.destroyBody(body);
-            }
+            individual.getJoints().forEach(world::destroyJoint);
+            individual.getBodies().forEach(world::destroyBody);
         }
         individuals.clear();
     }
