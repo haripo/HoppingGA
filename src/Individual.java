@@ -162,7 +162,7 @@ public class Individual {
             jointDef.localAnchorA.set(0.1f, 0);
             jointDef.localAnchorB.set(-0.1f, 0.0f);
             jointDef.enableLimit = true;
-            jointDef.upperTranslation = 2;
+            jointDef.upperTranslation = 1;
             jointDef.lowerTranslation = 0;
             shoulderArmJoint = (PrismaticJoint)world.createJoint(jointDef);
             joints.add(shoulderArmJoint);
@@ -249,5 +249,9 @@ public class Individual {
 
     public int getHeight() {
         return (int)(bodies.get(0).getPosition().y);
+    }
+
+    public float getHeadHeight() {
+        return headFixture.getBody().getPosition().y;
     }
 }

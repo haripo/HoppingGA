@@ -90,7 +90,7 @@ public class Main extends JFrame {
                 int armSpeed = genes[i][gene_index] == 0 ? -1 : 1;
                 int shoulderSpeed = genes[i][gene_index + 1] == 0 ? -1 : 1;
                 int footSpeed = genes[i][gene_index + 2] == 0 ? -1 : 1;
-                world.setIndividualMove(i, armSpeed, shoulderSpeed, footSpeed);
+                world.setIndividualMove(i, armSpeed * 2, shoulderSpeed, footSpeed * 2);
             }
             gene_index += gene_pair_size;
             if(gene_index >= gene_length){
@@ -99,7 +99,7 @@ public class Main extends JFrame {
 
             for(int i = 0; i < population_size; i++) {
                 if(world.getIsSlipped(i)) {
-                    fitnesses[i] -= 5;
+                    fitnesses[i] -= 50;
                 }
             }
         }
@@ -109,7 +109,7 @@ public class Main extends JFrame {
             generation += 1;
 
             average_fitness = 0;
-            int best_fitness = 0;
+            int best_fitness = Integer.MIN_VALUE;
             for (int i = 0; i < fitnesses.length; i++) {
                 fitnesses[i] += world.getDistance(i);
                 average_fitness += fitnesses[i];
