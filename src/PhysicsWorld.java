@@ -73,7 +73,8 @@ public class PhysicsWorld {
                 switch (fixture.getType()) {
                     case CIRCLE: {
                         CircleShape shape = (CircleShape) fixture.getShape();
-                        canvas.drawCircle(shape.m_p.x, shape.m_p.y, shape.m_radius);
+                        Vec2 vertex = Transform.mul(transform, shape.getVertex(0));
+                        canvas.drawCircle(vertex.x, vertex.y, shape.m_radius);
                         break;
                     }
                     case POLYGON: {

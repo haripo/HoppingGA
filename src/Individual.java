@@ -1,3 +1,4 @@
+import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.*;
@@ -9,6 +10,8 @@ import java.util.List;
 public class Individual {
     private ArrayList<Joint> joints = new ArrayList<>();
     private ArrayList<Body> bodies = new ArrayList<>();
+
+    private Fixture headFixture;
 
     private PrismaticJoint shoulderArmJoint;
     private PrismaticJoint bodyFootJoint;
@@ -33,6 +36,16 @@ public class Individual {
             fixtureDef.friction = 40.0f;
             fixtureDef.filter = fixture_filter;
 
+            CircleShape circleShape = new CircleShape();
+            circleShape.setRadius(0.3f);
+            circleShape.m_p.set(0, -1.0f);
+
+            FixtureDef headFixtureDef = new FixtureDef();
+            headFixtureDef.shape = circleShape;
+            headFixtureDef.density = 20.0f;
+            headFixtureDef.friction = 40.0f;
+            headFixtureDef.filter = fixture_filter;
+
             BodyDef bodyDef = new BodyDef();
             bodyDef.position = new Vec2(2.0f, 0.6f);
             bodyDef.angle = 0.0f;
@@ -40,6 +53,7 @@ public class Individual {
 
             Body boxBody = world.createBody(bodyDef);
             bodyFixture = boxBody.createFixture(fixtureDef);
+            headFixture = boxBody.createFixture(headFixtureDef);
             bodies.add(boxBody);
             bodyBody = boxBody;
         }
@@ -117,7 +131,7 @@ public class Individual {
         Body boardBody;
         {
             PolygonShape shape = new PolygonShape();
-            shape.setAsBox(0.1f, 1.6f);
+            shape.setAsBox(0.1f, 1.5f);
 
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.shape = shape;
@@ -149,7 +163,7 @@ public class Individual {
             jointDef.localAnchorB.set(-0.1f, 0.0f);
             jointDef.enableLimit = true;
             jointDef.upperTranslation = 2;
-            jointDef.lowerTranslation = 1;
+            jointDef.lowerTranslation = 0;
             shoulderArmJoint = (PrismaticJoint)world.createJoint(jointDef);
             joints.add(shoulderArmJoint);
         }
@@ -167,7 +181,7 @@ public class Individual {
             jointDef.maxMotorForce = 1000f;
             jointDef.enableLimit = true;
             jointDef.upperTranslation = 2;
-            jointDef.lowerTranslation = 1;
+            jointDef.lowerTranslation = 0;
             bodyFootJoint = (PrismaticJoint) world.createJoint(jointDef);
             joints.add(bodyFootJoint);
         }
@@ -192,7 +206,7 @@ public class Individual {
             jointDef.bodyA = footBody;
             jointDef.bodyB = boardBody;
             jointDef.localAnchorA.set(0f, 0.1f);
-            jointDef.localAnchorB.set(0f, 0.8f);
+            jointDef.localAnchorB.set(0f, 1.0f);
             jointDef.collideConnected = false;
             joints.add(world.createJoint(jointDef));
         }
@@ -203,7 +217,7 @@ public class Individual {
             jointDef.bodyA = armBody;
             jointDef.bodyB = boardBody;
             jointDef.localAnchorA.set(0.1f, 0);
-            jointDef.localAnchorB.set(0f, -0.8f);
+            jointDef.localAnchorB.set(0f, -1.0f);
             jointDef.collideConnected = false;
             joints.add(world.createJoint(jointDef));
         }
