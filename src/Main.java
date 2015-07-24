@@ -5,10 +5,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Main extends JFrame {
     private Canvas canvas;
     private PhysicsWorld world;
+
+    private HashMap<String, String> infoMap = new HashMap<>();
 
     private SimpleGeneticAlgorithm ga;
     private GeneStorage storage;
@@ -79,8 +82,14 @@ public class Main extends JFrame {
     public void Step() {
         world.step(1);
 
+        // refresh info
+        infoMap.put("Tick", Integer.toString(tickCount));
+        infoMap.put("Generation", Integer.toString(generation));
+        infoMap.put("FastMode", Boolean.toString(fast_mode));
+
         // redraw canvas
         world.draw(canvas);
+        canvas.drawInfoString(infoMap);
         canvas.repaint();
 
         int[][] genes = ga.getGenes();
