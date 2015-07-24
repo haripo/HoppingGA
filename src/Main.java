@@ -87,10 +87,10 @@ public class Main extends JFrame {
         tickCount += 1;
         if (tickCount % action_span == 0) {
             for (int i = 0; i < population_size; i++) {
-                for (int j = 0; j < gene_pair_size; j++) {
-                    int sp = genes[i][gene_index + j] == 0 ? -1 : 1;
-                    world.setMotorSpeed(i, j, sp);
-                }
+                int armSpeed = genes[i][gene_index] == 0 ? -1 : 1;
+                int shoulderSpeed = genes[i][gene_index + 1] == 0 ? -1 : 1;
+                int footSpeed = genes[i][gene_index + 2] == 0 ? -1 : 1;
+                world.setIndividualMove(i, armSpeed, shoulderSpeed, footSpeed);
             }
             gene_index += gene_pair_size;
             if(gene_index >= gene_length){

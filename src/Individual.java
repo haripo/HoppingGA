@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Individual {
-    private ArrayList<PrismaticJoint> joints = new ArrayList<>();
-    private ArrayList<RevoluteJoint> revoluteJoints = new ArrayList<>();
+    private ArrayList<Joint> joints = new ArrayList<>();
     private ArrayList<Body> bodies = new ArrayList<>();
+
+    private PrismaticJoint shoulderArmJoint;
+    private PrismaticJoint bodyFootJoint;
+    private RevoluteJoint shoulderBodyJoint;
 
     public Fixture bodyFixture;
 
@@ -147,8 +150,8 @@ public class Individual {
             jointDef.enableLimit = true;
             jointDef.upperTranslation = 2;
             jointDef.lowerTranslation = 1;
-            PrismaticJoint joint = (PrismaticJoint)world.createJoint(jointDef);
-            joints.add(joint);
+            shoulderArmJoint = (PrismaticJoint)world.createJoint(jointDef);
+            joints.add(shoulderArmJoint);
         }
 
         // body-foot joint
@@ -165,8 +168,8 @@ public class Individual {
             jointDef.enableLimit = true;
             jointDef.upperTranslation = 2;
             jointDef.lowerTranslation = 1;
-            PrismaticJoint joint = (PrismaticJoint)world.createJoint(jointDef);
-            joints.add(joint);
+            bodyFootJoint = (PrismaticJoint) world.createJoint(jointDef);
+            joints.add(bodyFootJoint);
         }
 
         // shoulder-body joint
@@ -179,7 +182,8 @@ public class Individual {
             jointDef.collideConnected = false;
             jointDef.enableMotor = true;
             jointDef.maxMotorTorque = 100f;
-            revoluteJoints.add((RevoluteJoint) world.createJoint(jointDef));
+            shoulderBodyJoint = (RevoluteJoint) world.createJoint(jointDef);
+            joints.add(shoulderBodyJoint);
         }
 
         // foot-board joint
@@ -190,7 +194,7 @@ public class Individual {
             jointDef.localAnchorA.set(0f, 0.1f);
             jointDef.localAnchorB.set(0f, 0.8f);
             jointDef.collideConnected = false;
-            world.createJoint(jointDef);
+            joints.add(world.createJoint(jointDef));
         }
 
         // arm-board joint
@@ -201,7 +205,7 @@ public class Individual {
             jointDef.localAnchorA.set(0.1f, 0);
             jointDef.localAnchorB.set(0f, -0.8f);
             jointDef.collideConnected = false;
-            world.createJoint(jointDef);
+            joints.add(world.createJoint(jointDef));
         }
     }
 
@@ -209,12 +213,20 @@ public class Individual {
         return bodies;
     }
 
-    public void SetMotorSpeed(int i, int s){
-        if(i < 2) {
-            joints.get(i).setMotorSpeed(s * 2);
-        } else {
-            revoluteJoints.get(0).setMotorSpeed(s * 2);
-        }
+    public ArrayList<Joint> getJoints() {
+        return joints;
+    }
+
+    public void setSholderAngleSpeed(float speed) {
+        shoulderBodyJoint.setMotorSpeed(speed);
+    }
+
+    public void setArmSpeed(float speed) {
+        shoulderArmJoint.setMotorSpeed(speed);
+    }
+
+    public void setFootSpeed(float speed) {
+        bodyFootJoint.setMotorSpeed(speed);
     }
 
     public int getDistance() {

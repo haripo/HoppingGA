@@ -54,6 +54,12 @@ public class PhysicsWorld {
         individuals.clear();
     }
 
+    public void setIndividualMove(int individual, float arm, float shoulder, float foot) {
+        individuals.get(individual).setArmSpeed(arm);
+        individuals.get(individual).setSholderAngleSpeed(shoulder);
+        individuals.get(individual).setFootSpeed(foot);
+    }
+
     public void draw(Canvas canvas) {
         canvas.fill();
 
@@ -98,10 +104,6 @@ public class PhysicsWorld {
             canvas.drawLine(anchorA.x, anchorA.y, anchorB.x, anchorB.y);
             joint = joint.getNext();
         }
-    }
-
-    public void setMotorSpeed(int individual, int i, int speed) {
-        individuals.get(individual).SetMotorSpeed(i, speed);
     }
 
     public int getDistance(int individual){
