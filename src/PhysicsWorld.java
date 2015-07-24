@@ -56,7 +56,7 @@ public class PhysicsWorld {
 
     public void setIndividualMove(int individual, float arm, float shoulder, float foot) {
         individuals.get(individual).setArmSpeed(arm);
-        individuals.get(individual).setSholderAngleSpeed(shoulder);
+        individuals.get(individual).setShoulderAngleSpeed(shoulder);
         individuals.get(individual).setFootSpeed(foot);
     }
 

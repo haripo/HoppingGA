@@ -217,7 +217,7 @@ public class Individual {
         return joints;
     }
 
-    public void setSholderAngleSpeed(float speed) {
+    public void setShoulderAngleSpeed(float speed) {
         shoulderBodyJoint.setMotorSpeed(speed);
     }
 
