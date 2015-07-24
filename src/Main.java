@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Main extends JFrame {
-    private Timer timer;
     private Canvas canvas;
     private PhysicsWorld world;
 
@@ -15,7 +14,7 @@ public class Main extends JFrame {
     private GeneStorage storage;
 
     private int gene_length = 100 * 3;
-    private int population_size = 100;
+    private int population_size = 10;
     private double mutation_rate = 0.02;
     private double crossover_rate = 0.6;
 
@@ -25,7 +24,8 @@ public class Main extends JFrame {
     private double average_fitness = 0;
 
     private int tickCount = 0;
-    private int step_speed = 1;
+    private boolean fast_mode = false;
+
     private int gene_index = 0;
     private int generation = 0;
 
@@ -33,11 +33,7 @@ public class Main extends JFrame {
     private KeyAdapter keyAdapter = new KeyAdapter() {
         @Override
         public void keyTyped(KeyEvent e) {
-            if (step_speed == 1) {
-                step_speed = 10;
-            } else {
-                step_speed = 1;
-            }
+            fast_mode = !fast_mode;
         }
     };
 
@@ -65,15 +61,23 @@ public class Main extends JFrame {
         setBounds(0, 0, 1000, 600);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-
-        timer = new Timer(1000 / 30, (x) -> Tick());
-        timer.start();
     }
 
     private int[] fitnesses = new int[population_size];
 
-    public void Tick() {
-        world.step(step_speed);
+    public void MainLoop() {
+        try {
+            while (true) {
+                Step();
+                if(!fast_mode) Thread.sleep(20);
+            }
+        } catch (InterruptedException e) {
+            return;
+        }
+    }
+
+    public void Step() {
+        world.step(1);
 
         // redraw canvas
         world.draw(canvas);
@@ -133,6 +137,7 @@ public class Main extends JFrame {
     }
 
     public static void main(String[] args) {
-        Main test = new Main();
+        Main main = new Main();
+        main.MainLoop();
     }
 }
