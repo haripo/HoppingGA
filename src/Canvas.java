@@ -40,6 +40,34 @@ public class Canvas extends JComponent {
         g.drawImage(buffer, 0, 0, null);
     }
 
+    public void moveLeft() {
+        shiftX += 0.2f;
+    }
+
+    public void moveRight() {
+        shiftX -= 0.2f;
+    }
+
+    public void zoomUp() {
+        scale += 0.5f;
+    }
+
+    public void zoomDown() {
+        scale -= 0.5f;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public float getShiftX() {
+        return shiftX;
+    }
+
+    public float getShiftY() {
+        return shiftY;
+    }
+
     public void fill() {
         Graphics graphics = getBufferGraphics();
         graphics.setColor(Color.white);

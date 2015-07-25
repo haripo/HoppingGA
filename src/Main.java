@@ -36,8 +36,24 @@ public class Main extends JFrame {
 
     private KeyAdapter keyAdapter = new KeyAdapter() {
         @Override
-        public void keyTyped(KeyEvent e) {
-            fast_mode = !fast_mode;
+        public void keyPressed(KeyEvent e) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_SPACE:
+                    fast_mode = !fast_mode;
+                    break;
+                case KeyEvent.VK_LEFT:
+                    canvas.moveLeft();
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    canvas.moveRight();
+                    break;
+                case KeyEvent.VK_UP:
+                    canvas.zoomUp();
+                    break;
+                case KeyEvent.VK_DOWN:
+                    canvas.zoomDown();
+                    break;
+            }
         }
     };
 
@@ -89,12 +105,15 @@ public class Main extends JFrame {
         infoMap.put("Tick", Integer.toString(tickCount));
         infoMap.put("Generation", Integer.toString(generation));
         infoMap.put("FastMode", Boolean.toString(fast_mode));
+        infoMap.put("Scale", Float.toString(canvas.getScale()));
+        infoMap.put("CameraX", Float.toString(canvas.getShiftX()));
+        infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
 
         // redraw canvas
         if (!fast_mode || tickCount % 10 == 0) {
             world.draw(canvas);
             canvas.drawInfoString(infoMap);
-            canvas.drawLine(-100, 9.5f, 100, 9.5f);
+            canvas.drawLine(-20, 9.5f, 20, 9.5f);
             canvas.repaint();
         }
 

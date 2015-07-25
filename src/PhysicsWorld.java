@@ -25,7 +25,7 @@ public class PhysicsWorld {
         // ground
         FixtureDef groundFixture = new FixtureDef();
         PolygonShape groundShape = new PolygonShape();
-        groundShape.setAsBox(100f, 0.1f);
+        groundShape.setAsBox(20f, 0.1f);
         groundFixture.shape = groundShape;
         groundFixture.density = 25.0f;
         groundFixture.filter = new Filter();
