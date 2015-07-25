@@ -88,9 +88,11 @@ public class Main extends JFrame {
         infoMap.put("FastMode", Boolean.toString(fast_mode));
 
         // redraw canvas
-        world.draw(canvas);
-        canvas.drawInfoString(infoMap);
-        canvas.repaint();
+        if (!fast_mode || tickCount % 10 == 0) {
+            world.draw(canvas);
+            canvas.drawInfoString(infoMap);
+            canvas.repaint();
+        }
 
         int[][] genes = ga.getGenes();
         tickCount += 1;
