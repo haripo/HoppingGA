@@ -13,6 +13,7 @@ public class Individual {
 
     private Fixture headFixture;
     private Body boardBody;
+    private Body handBody;
 
     private PrismaticJoint shoulderArmJoint;
     private PrismaticJoint bodyFootJoint;
@@ -59,8 +60,7 @@ public class Individual {
             bodyBody = boxBody;
         }
 
-        // arm
-        Body armBody;
+        // hand
         {
             PolygonShape shape = new PolygonShape();
             shape.setAsBox(0.2f, 0.1f);
@@ -76,10 +76,9 @@ public class Individual {
             bodyDef.angle = 0.0f;
             bodyDef.type = BodyType.DYNAMIC;
 
-            Body boxBody = world.createBody(bodyDef);
-            boxBody.createFixture(fixtureDef);
-            bodies.add(boxBody);
-            armBody = boxBody;
+            handBody = world.createBody(bodyDef);
+            handBody.createFixture(fixtureDef);
+            bodies.add(handBody);
         }
 
         // foot
@@ -153,7 +152,7 @@ public class Individual {
         {
             PrismaticJointDef jointDef = new PrismaticJointDef();
             jointDef.bodyA = shoulderBody;
-            jointDef.bodyB = armBody;
+            jointDef.bodyB = handBody;
             jointDef.collideConnected = true;
             jointDef.enableMotor = true;
             jointDef.maxMotorForce = 1000f;
@@ -213,7 +212,7 @@ public class Individual {
         // arm-board joint
         {
             RevoluteJointDef jointDef = new RevoluteJointDef();
-            jointDef.bodyA = armBody;
+            jointDef.bodyA = handBody;
             jointDef.bodyB = boardBody;
             jointDef.localAnchorA.set(0.1f, 0);
             jointDef.localAnchorB.set(0f, -1.0f);
@@ -256,8 +255,8 @@ public class Individual {
         return position.y;
     }
 
-    public float getBoardPositionY() {
-        Vec2 position = boardBody.getPosition();
+    public float getHandPositionY() {
+        Vec2 position = handBody.getPosition();
         return position.y;
     }
 }

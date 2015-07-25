@@ -113,7 +113,7 @@ public class PhysicsWorld {
     public boolean getIsSlipped(int individual) {
         Individual target = individuals.get(individual);
         return target.getHeadHeight() > 9.5f ||
-                target.getBoardPositionY() > 9.5f;
+                target.getHandPositionY() > 9.5f;
     }
 
     public void step(int step_speed) {
