@@ -12,6 +12,7 @@ public class Individual {
     private ArrayList<Body> bodies = new ArrayList<>();
 
     private Fixture headFixture;
+    private Body boardBody;
 
     private PrismaticJoint shoulderArmJoint;
     private PrismaticJoint bodyFootJoint;
@@ -128,7 +129,6 @@ public class Individual {
         }
 
         // board
-        Body boardBody;
         {
             PolygonShape shape = new PolygonShape();
             shape.setAsBox(0.1f, 1.5f);
@@ -144,10 +144,9 @@ public class Individual {
             bodyDef.angle = 0.0f;
             bodyDef.type = BodyType.DYNAMIC;
 
-            Body boxBody = world.createBody(bodyDef);
-            boxBody.createFixture(fixtureDef);
-            bodies.add(boxBody);
-            boardBody = boxBody;
+            boardBody = world.createBody(bodyDef);
+            boardBody.createFixture(fixtureDef);
+            bodies.add(boardBody);
         }
 
         // shoulder-arm joint
@@ -252,6 +251,13 @@ public class Individual {
     }
 
     public float getHeadHeight() {
-        return headFixture.getBody().getPosition().y;
+        Vec2 position = ((CircleShape)headFixture.getShape()).m_p;
+        position = position.add(headFixture.getBody().getPosition());
+        return position.y;
+    }
+
+    public float getBoardPositionY() {
+        Vec2 position = boardBody.getPosition();
+        return position.y;
     }
 }

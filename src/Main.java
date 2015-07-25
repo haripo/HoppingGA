@@ -25,6 +25,7 @@ public class Main extends JFrame {
     private int gene_pair_size = 3;
 
     private double average_fitness = 0;
+    private int[] slipTimes;
 
     private int tickCount = 0;
     private boolean fast_mode = false;
@@ -44,6 +45,8 @@ public class Main extends JFrame {
         ga = new SimpleGeneticAlgorithm(
                 population_size, gene_length, mutation_rate, crossover_rate);
         ga.randomInitialize();
+
+        slipTimes = new int[population_size];
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "'hoppingGA_'yyyymmdd'_'HHmmss'.log'");
@@ -91,6 +94,7 @@ public class Main extends JFrame {
         if (!fast_mode || tickCount % 10 == 0) {
             world.draw(canvas);
             canvas.drawInfoString(infoMap);
+            canvas.drawLine(-100, 9.5f, 100, 9.5f);
             canvas.repaint();
         }
 
@@ -108,9 +112,10 @@ public class Main extends JFrame {
                 gene_index = 0;
             }
 
+            // set slip time
             for(int i = 0; i < population_size; i++) {
-                if(world.getIsSlipped(i)) {
-                    fitnesses[i] -= 50;
+                if(world.getIsSlipped(i) && slipTimes[i] == 0) {
+                    slipTimes[i] = tickCount;
                 }
             }
         }
@@ -118,6 +123,10 @@ public class Main extends JFrame {
         if(tickCount > action_span * gene_length / gene_pair_size) {
             tickCount = 0;
             generation += 1;
+
+            for (int i = 0; i < population_size; i++) {
+                fitnesses[i] += slipTimes[i] * 100;
+            }
 
             average_fitness = 0;
             int best_fitness = Integer.MIN_VALUE;
@@ -141,8 +150,14 @@ public class Main extends JFrame {
             world.removeAllIndividuals();
             world.addIndividual(population_size);
 
+            // reset fitnesses
             for (int i = 0; i < fitnesses.length; i++) {
                 fitnesses[i] = 100;
+            }
+
+            // reset slipTimes
+            for (int i = 0; i < slipTimes.length; i++) {
+                slipTimes[i] = 0;
             }
         }
     }
