@@ -1,7 +1,7 @@
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JComponent;
 
@@ -91,7 +91,7 @@ public class Canvas extends JComponent {
                 Math.round((x2 + shiftX) * scale), Math.round((y2 + shiftY) * scale));
     }
 
-    public void drawInfoString(HashMap<String, String> info) {
+    public void drawInfoString(Map<String, String> info) {
         Graphics graphics = getBufferGraphics();
         FontMetrics fontMetrics = graphics.getFontMetrics();
         int lineHeight = fontMetrics.getAscent();

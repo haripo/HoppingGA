@@ -1,14 +1,14 @@
 import GeneticAlgorithm.SimpleGeneticAlgorithm;
 
-import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Main extends JFrame {
-    private Canvas canvas;
+public class Main {
+    private MainFrame frame;
+
     private PhysicsWorld world;
 
     private HashMap<String, String> infoMap = new HashMap<>();
@@ -35,7 +35,6 @@ public class Main extends JFrame {
 
     private String logFilename;
 
-
     private KeyAdapter keyAdapter = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
@@ -43,23 +42,14 @@ public class Main extends JFrame {
                 case KeyEvent.VK_SPACE:
                     fast_mode = !fast_mode;
                     break;
-                case KeyEvent.VK_LEFT:
-                    canvas.moveLeft();
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    canvas.moveRight();
-                    break;
-                case KeyEvent.VK_UP:
-                    canvas.zoomUp();
-                    break;
-                case KeyEvent.VK_DOWN:
-                    canvas.zoomDown();
-                    break;
             }
         }
     };
 
     public Main() {
+        frame = new MainFrame();
+        frame.addKeyListener(keyAdapter);
+
         ga = new SimpleGeneticAlgorithm(
                 population_size, gene_length, mutation_rate, crossover_rate);
         ga.randomInitialize();
@@ -69,22 +59,11 @@ public class Main extends JFrame {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'_'HHmmss");
         logFilename = String.format("log_%s.csv", dateFormat.format(new Date()));
         storage = new GeneStorage(logFilename);
-        InitFrame();
-
-        addKeyListener(keyAdapter);
-    }
-
-    public void InitFrame() {
-        canvas = new Canvas();
-        getContentPane().add(canvas);
 
         world = new PhysicsWorld();
         world.addIndividual(population_size);
 
-        setTitle("Box2d");
-        setBounds(0, 0, 1000, 600);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
+
     }
 
     private int[] fitnesses = new int[population_size];
@@ -103,21 +82,17 @@ public class Main extends JFrame {
     public void Step() {
         world.step(1);
 
-        // refresh info
-        infoMap.put("Tick", Integer.toString(tickCount));
-        infoMap.put("Generation", Integer.toString(generation));
-        infoMap.put("FastMode", Boolean.toString(fast_mode));
-        infoMap.put("Scale", Float.toString(canvas.getScale()));
-        infoMap.put("CameraX", Float.toString(canvas.getShiftX()));
-        infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
-        infoMap.put("Log", logFilename);
-
-        // redraw canvas
+        // redraw
         if (!fast_mode || tickCount % 10 == 0) {
-            world.draw(canvas);
-            canvas.drawInfoString(infoMap);
-            canvas.drawLine(-20, 9.5f, 20, 9.5f);
-            canvas.repaint();
+            Canvas canvas = frame.getCanvas();
+            infoMap.put("Tick", Integer.toString(tickCount));
+            infoMap.put("Generation", Integer.toString(generation));
+            infoMap.put("FastMode", Boolean.toString(fast_mode));
+            infoMap.put("Scale", Float.toString(canvas.getScale()));
+            infoMap.put("CameraX", Float.toString(canvas.getShiftX()));
+            infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
+            infoMap.put("Log", logFilename);
+            frame.redraw(infoMap, world);
         }
 
         int[][] genes = ga.getGenes();
