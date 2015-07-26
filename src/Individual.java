@@ -230,7 +230,7 @@ public class Individual {
     }
 
     public void setShoulderAngleSpeed(float speed) {
-        shoulderBodyJoint.setMotorSpeed(speed);
+        //shoulderBodyJoint.setMotorSpeed(speed);
     }
 
     public void setArmSpeed(float speed) {
