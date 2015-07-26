@@ -24,7 +24,6 @@ public class Main {
     private int action_span = 3;
     private int gene_pair_size = 3;
 
-    private double average_fitness = 0;
     private int[] slipTimes;
 
     private int tickCount = 0;
@@ -33,7 +32,7 @@ public class Main {
     private int gene_index = 0;
     private int generation = 0;
 
-    private String logFilename;
+    private int[] fitnesses = new int[population_size];
 
     private KeyAdapter keyAdapter = new KeyAdapter() {
         @Override
@@ -46,6 +45,17 @@ public class Main {
         }
     };
 
+    private void redraw() {
+        Canvas canvas = frame.getCanvas();
+        infoMap.put("Tick", Integer.toString(tickCount));
+        infoMap.put("Generation", Integer.toString(generation));
+        infoMap.put("FastMode", Boolean.toString(fast_mode));
+        infoMap.put("Scale", Float.toString(canvas.getScale()));
+        infoMap.put("CameraX", Float.toString(canvas.getShiftX()));
+        infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
+        frame.redraw(infoMap, world);
+    }
+
     public Main() {
         frame = new MainFrame();
         frame.addKeyListener(keyAdapter);
@@ -57,21 +67,18 @@ public class Main {
         slipTimes = new int[population_size];
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'_'HHmmss");
-        logFilename = String.format("log_%s.csv", dateFormat.format(new Date()));
+        String logFilename = String.format("log_%s.csv", dateFormat.format(new Date()));
         storage = new GeneStorage(logFilename);
+        infoMap.put("Log", logFilename);
 
         world = new PhysicsWorld();
         world.addIndividual(population_size);
-
-
     }
 
-    private int[] fitnesses = new int[population_size];
-
-    public void MainLoop() {
+    public void mainLoop() {
         try {
             while (true) {
-                Step();
+                step();
                 if(!fast_mode) Thread.sleep(20);
             }
         } catch (InterruptedException e) {
@@ -79,20 +86,11 @@ public class Main {
         }
     }
 
-    public void Step() {
+    public void step() {
         world.step(1);
 
-        // redraw
-        if (!fast_mode || tickCount % 10 == 0) {
-            Canvas canvas = frame.getCanvas();
-            infoMap.put("Tick", Integer.toString(tickCount));
-            infoMap.put("Generation", Integer.toString(generation));
-            infoMap.put("FastMode", Boolean.toString(fast_mode));
-            infoMap.put("Scale", Float.toString(canvas.getScale()));
-            infoMap.put("CameraX", Float.toString(canvas.getShiftX()));
-            infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
-            infoMap.put("Log", logFilename);
-            frame.redraw(infoMap, world);
+        if (!fast_mode || tickCount % 20 == 0) {
+            redraw();
         }
 
         int[][] genes = ga.getGenes();
@@ -125,17 +123,13 @@ public class Main {
                 fitnesses[i] += slipTimes[i] * 100;
             }
 
-            average_fitness = 0;
             int best_fitness = Integer.MIN_VALUE;
             for (int i = 0; i < fitnesses.length; i++) {
                 fitnesses[i] += world.getDistance(i);
-                average_fitness += fitnesses[i];
                 if(best_fitness < fitnesses[i]) {
                     best_fitness = fitnesses[i];
                 }
             }
-            average_fitness /= fitnesses.length;
-            System.out.println("ave: " + average_fitness + " best: " + best_fitness);
 
             // save log
             for (int i = 0; i < population_size; i++) {
@@ -161,6 +155,6 @@ public class Main {
 
     public static void main(String[] args) {
         Main main = new Main();
-        main.MainLoop();
+        main.mainLoop();
     }
 }
