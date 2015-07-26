@@ -33,6 +33,8 @@ public class Main extends JFrame {
     private int gene_index = 0;
     private int generation = 0;
 
+    private String logFilename;
+
 
     private KeyAdapter keyAdapter = new KeyAdapter() {
         @Override
@@ -64,9 +66,9 @@ public class Main extends JFrame {
 
         slipTimes = new int[population_size];
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "'hoppingGA_'yyyymmdd'_'HHmmss'.log'");
-        storage = new GeneStorage(dateFormat.format(new Date()));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'_'HHmmss");
+        logFilename = String.format("log_%s.csv", dateFormat.format(new Date()));
+        storage = new GeneStorage(logFilename);
         InitFrame();
 
         addKeyListener(keyAdapter);
@@ -108,6 +110,7 @@ public class Main extends JFrame {
         infoMap.put("Scale", Float.toString(canvas.getScale()));
         infoMap.put("CameraX", Float.toString(canvas.getShiftX()));
         infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
+        infoMap.put("Log", logFilename);
 
         // redraw canvas
         if (!fast_mode || tickCount % 10 == 0) {
