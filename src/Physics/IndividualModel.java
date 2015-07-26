@@ -23,10 +23,10 @@ public class IndividualModel {
 
     public Fixture bodyFixture;
 
-    public IndividualModel(World world, int floorCategory, int warmCategory) {
+    public IndividualModel(World world) {
         Filter fixture_filter = new Filter();
-        fixture_filter.categoryBits = warmCategory;
-        fixture_filter.maskBits = floorCategory;
+        fixture_filter.categoryBits = 0x0002;
+        fixture_filter.maskBits = 0x0001;
 
         // body
         Body bodyBody;

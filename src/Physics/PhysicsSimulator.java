@@ -11,13 +11,14 @@ import org.jbox2d.dynamics.joints.Joint;
 public class PhysicsSimulator {
     private World world;
 
-    private int warmCategory = 0x0001;
-    private int floorCategory = 0x0002;
-
     private ArrayList<IndividualModel> individuals = new ArrayList<>();
 
     public PhysicsSimulator() {
         initWorld();
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     public void initWorld() {
@@ -31,7 +32,7 @@ public class PhysicsSimulator {
         groundFixture.shape = groundShape;
         groundFixture.density = 25.0f;
         groundFixture.filter = new Filter();
-        groundFixture.filter.categoryBits = floorCategory;
+        groundFixture.filter.categoryBits = 0x0001;
 
         BodyDef groundBody = new BodyDef();
         groundBody.position = new Vec2(0.0f, 11.0f);
@@ -40,25 +41,16 @@ public class PhysicsSimulator {
         world.createBody(groundBody).createFixture(groundFixture);
     }
 
-    public void addIndividual(int indCount) {
-        for(int i = 0; i < indCount; i++) {
-            IndividualModel individual = new IndividualModel(world, floorCategory, warmCategory);
-            individuals.add(individual);
-        }
+    public void addModel(IndividualModel model) {
+        individuals.add(model);
     }
 
-    public void removeAllIndividuals() {
+    public void removeModels() {
         for (IndividualModel individual : individuals) {
             individual.getJoints().forEach(world::destroyJoint);
             individual.getBodies().forEach(world::destroyBody);
         }
         individuals.clear();
-    }
-
-    public void setIndividualMove(int individual, float arm, float shoulder, float foot) {
-        individuals.get(individual).setArmSpeed(arm);
-        individuals.get(individual).setShoulderAngleSpeed(shoulder);
-        individuals.get(individual).setFootSpeed(foot);
     }
 
     public void draw(Renderer canvas) {
@@ -106,16 +98,6 @@ public class PhysicsSimulator {
             canvas.drawLine(anchorA.x, anchorA.y, anchorB.x, anchorB.y);
             joint = joint.getNext();
         }
-    }
-
-    public int getDistance(int individual){
-        return individuals.get(individual).getDistance();
-    }
-
-    public boolean getIsSlipped(int individual) {
-        IndividualModel target = individuals.get(individual);
-        return target.getHeadHeight() > 9.5f ||
-                target.getHandPositionY() > 9.5f;
     }
 
     public void step(int step_speed) {

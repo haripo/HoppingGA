@@ -10,87 +10,84 @@ import java.util.HashMap;
 public class Main {
     private MainFrame frame;
 
-    private PhysicsSimulator world;
-
-    private HashMap<String, String> infoMap = new HashMap<>();
+    private PhysicsSimulator simulator;
+    private Individual[] individuals;
 
     private SimpleGeneticAlgorithm ga;
     private GeneStorage storage;
 
-    private int gene_length = 100 * 3;
-    private int population_size = 10;
-    private double mutation_rate = 0.02;
-    private double crossover_rate = 0.6;
+    private HashMap<String, String> infoMap = new HashMap<>();
 
-    private int action_span = 3;
-    private int gene_pair_size = 3;
+    private final int geneLength = 300;
+    private final int populationSize = 10;
+    private final double mutationRate = 0.02;
+    private final double crossoverRate = 0.6;
 
-    private int[] fitnesses = new int[population_size];
-    private int[] slipTimes;
+    private final int actionSpan = 3;
+    private int generationSpan;
 
-    private int tickCount = 0;
-    private boolean fast_mode = false;
-
+    private int tick = 0;
     private int generation = 0;
+
+    private boolean fastMode = false;
 
     private KeyAdapter keyAdapter = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_SPACE:
-                    fast_mode = !fast_mode;
+                    fastMode = !fastMode;
                     break;
             }
         }
     };
 
+    private void createIndividuals() {
+        int[][] genes = ga.getGenes();
+        simulator.removeModels();
+        for (int i = 0; i < populationSize; i++) {
+            individuals[i] = new Individual(simulator, genes[i], actionSpan);
+            simulator.addModel(individuals[i].getModel());
+        }
+    }
+
     private void redraw() {
         Canvas canvas = frame.getCanvas();
-        infoMap.put("Tick", Integer.toString(tickCount));
+        infoMap.put("Tick", Integer.toString(tick));
         infoMap.put("Generation", Integer.toString(generation));
-        infoMap.put("FastMode", Boolean.toString(fast_mode));
+        infoMap.put("FastMode", Boolean.toString(fastMode));
         infoMap.put("Scale", Float.toString(canvas.getScale()));
         infoMap.put("CameraX", Float.toString(canvas.getShiftX()));
         infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
-        frame.redraw(infoMap, world);
-    }
-
-    private void changeAction(int action_index) {
-        int[][] genes = ga.getGenes();
-        int gene_index = action_index * gene_pair_size;
-
-        for (int i = 0; i < population_size; i++) {
-            int armSpeed = genes[i][gene_index] == 0 ? -1 : 1;
-            int shoulderSpeed = genes[i][gene_index + 1] == 0 ? -1 : 1;
-            int footSpeed = genes[i][gene_index + 2] == 0 ? -1 : 1;
-            world.setIndividualMove(i, armSpeed * 2, shoulderSpeed, footSpeed * 2);
-        }
+        frame.redraw(infoMap, simulator);
     }
 
     public Main() {
         frame = new MainFrame();
         frame.addKeyListener(keyAdapter);
 
-        ga = new SimpleGeneticAlgorithm(
-                population_size, gene_length, mutation_rate, crossover_rate);
+        ga = new SimpleGeneticAlgorithm(populationSize, geneLength, mutationRate, crossoverRate);
         ga.randomInitialize();
 
-        slipTimes = new int[population_size];
+        generationSpan = geneLength / actionSpan;
+
+        individuals = new Individual[populationSize];
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'_'HHmmss");
         String logFilename = String.format("log_%s.csv", dateFormat.format(new Date()));
         storage = new GeneStorage(logFilename);
         infoMap.put("Log", logFilename);
 
-        world = new PhysicsSimulator();
-        world.addIndividual(population_size);
+        simulator = new PhysicsSimulator();
+
+        createIndividuals();
     }
 
     public void mainLoop() {
         try {
             while (true) {
                 step();
-                if(!fast_mode) Thread.sleep(20);
+                if(!fastMode) Thread.sleep(20);
             }
         } catch (InterruptedException e) {
             return;
@@ -98,59 +95,36 @@ public class Main {
     }
 
     public void step() {
-        world.step(1);
+        simulator.step(1);
+        tick += 1;
 
-        if (!fast_mode || tickCount % 20 == 0) {
+        if (!fastMode || tick % 20 == 0) {
             redraw();
         }
 
-        tickCount += 1;
-        if (tickCount % action_span == 0) {
-            changeAction(tickCount / action_span);
-
-            // set slip time
-            for(int i = 0; i < population_size; i++) {
-                if(world.getIsSlipped(i) && slipTimes[i] == 0) {
-                    slipTimes[i] = tickCount;
-                }
-            }
-        }
-
-        if (tickCount > action_span * gene_length / gene_pair_size) {
-            tickCount = 0;
+        // update generation
+        if (tick >= generationSpan) {
+            tick = 0;
             generation += 1;
 
-            for (int i = 0; i < population_size; i++) {
-                fitnesses[i] += slipTimes[i] * 100;
-            }
-
-            int best_fitness = Integer.MIN_VALUE;
+            int[] fitnesses = new int[populationSize];
             for (int i = 0; i < fitnesses.length; i++) {
-                fitnesses[i] += world.getDistance(i);
-                if(best_fitness < fitnesses[i]) {
-                    best_fitness = fitnesses[i];
-                }
+                fitnesses[i] = individuals[i].getFitness();
             }
 
             // save log
             int[][] genes = ga.getGenes();
-            for (int i = 0; i < population_size; i++) {
+            for (int i = 0; i < populationSize; i++) {
                 storage.save(generation, fitnesses[i], genes[i]);
             }
 
+            // create next generation
             ga.generateNext(fitnesses);
-
-            world.removeAllIndividuals();
-            world.addIndividual(population_size);
-
-            // reset fitnesses
-            for (int i = 0; i < fitnesses.length; i++) {
-                fitnesses[i] = 100;
-            }
-
-            // reset slipTimes
-            for (int i = 0; i < slipTimes.length; i++) {
-                slipTimes[i] = 0;
+            createIndividuals();
+        } else {
+            // update individual
+            for (Individual individual : individuals) {
+                individual.step(tick);
             }
         }
     }
