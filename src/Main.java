@@ -69,7 +69,7 @@ public class Main {
         ga = new SimpleGeneticAlgorithm(populationSize, geneLength, mutationRate, crossoverRate);
         ga.randomInitialize();
 
-        generationSpan = geneLength / actionSpan;
+        generationSpan = (geneLength / Individual.genePairLength) * actionSpan;
 
         individuals = new Individual[populationSize];
 

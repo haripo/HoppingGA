@@ -11,6 +11,8 @@ public class Individual {
     private int actionIndex = 0;
     private int slipTime = 0;
 
+    public static int genePairLength = 2;
+
     private boolean getIsSlipped() {
         return model.getHeadHeight() > 9.5f || model.getHandPositionY() > 9.5f;
     }
