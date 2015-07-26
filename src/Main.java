@@ -1,4 +1,5 @@
 import GeneticAlgorithm.SimpleGeneticAlgorithm;
+import Physics.PhysicsSimulator;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 public class Main {
     private MainFrame frame;
 
-    private PhysicsWorld world;
+    private PhysicsSimulator world;
 
     private HashMap<String, String> infoMap = new HashMap<>();
 
@@ -81,7 +82,7 @@ public class Main {
         storage = new GeneStorage(logFilename);
         infoMap.put("Log", logFilename);
 
-        world = new PhysicsWorld();
+        world = new PhysicsSimulator();
         world.addIndividual(population_size);
     }
 

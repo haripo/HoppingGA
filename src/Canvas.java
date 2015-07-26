@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 
-public class Canvas extends JComponent {
+public class Canvas extends JComponent implements Physics.Renderer {
     private Image buffer;
 
     private float scale = 40f;

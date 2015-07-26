@@ -1,3 +1,5 @@
+package Physics;
+
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -7,7 +9,7 @@ import org.jbox2d.dynamics.joints.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Individual {
+public class IndividualModel {
     private ArrayList<Joint> joints = new ArrayList<>();
     private ArrayList<Body> bodies = new ArrayList<>();
 
@@ -21,7 +23,7 @@ public class Individual {
 
     public Fixture bodyFixture;
 
-    public Individual(World world, int floorCategory, int warmCategory) {
+    public IndividualModel(World world, int floorCategory, int warmCategory) {
         Filter fixture_filter = new Filter();
         fixture_filter.categoryBits = warmCategory;
         fixture_filter.maskBits = floorCategory;

@@ -1,3 +1,5 @@
+package Physics;
+
 import java.util.ArrayList;
 
 import org.jbox2d.collision.shapes.CircleShape;
@@ -6,15 +8,15 @@ import org.jbox2d.common.*;
 import org.jbox2d.dynamics.*;
 import org.jbox2d.dynamics.joints.Joint;
 
-public class PhysicsWorld {
+public class PhysicsSimulator {
     private World world;
 
     private int warmCategory = 0x0001;
     private int floorCategory = 0x0002;
 
-    private ArrayList<Individual> individuals = new ArrayList<>();
+    private ArrayList<IndividualModel> individuals = new ArrayList<>();
 
-    public PhysicsWorld() {
+    public PhysicsSimulator() {
         initWorld();
     }
 
@@ -40,13 +42,13 @@ public class PhysicsWorld {
 
     public void addIndividual(int indCount) {
         for(int i = 0; i < indCount; i++) {
-            Individual individual = new Individual(world, floorCategory, warmCategory);
+            IndividualModel individual = new IndividualModel(world, floorCategory, warmCategory);
             individuals.add(individual);
         }
     }
 
     public void removeAllIndividuals() {
-        for (Individual individual : individuals) {
+        for (IndividualModel individual : individuals) {
             individual.getJoints().forEach(world::destroyJoint);
             individual.getBodies().forEach(world::destroyBody);
         }
@@ -59,7 +61,7 @@ public class PhysicsWorld {
         individuals.get(individual).setFootSpeed(foot);
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(Renderer canvas) {
         canvas.fill();
 
         Body body = world.getBodyList();
@@ -111,7 +113,7 @@ public class PhysicsWorld {
     }
 
     public boolean getIsSlipped(int individual) {
-        Individual target = individuals.get(individual);
+        IndividualModel target = individuals.get(individual);
         return target.getHeadHeight() > 9.5f ||
                 target.getHandPositionY() > 9.5f;
     }

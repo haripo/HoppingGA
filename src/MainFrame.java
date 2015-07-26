@@ -1,3 +1,5 @@
+import Physics.PhysicsSimulator;
+
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -42,7 +44,7 @@ public class MainFrame extends JFrame {
         addKeyListener(keyAdapter);
     }
 
-    public void redraw(Map<String, String> debugInfo, PhysicsWorld world) {
+    public void redraw(Map<String, String> debugInfo, PhysicsSimulator world) {
         canvas.fill();
         world.draw(canvas);
         canvas.drawInfoString(debugInfo);
