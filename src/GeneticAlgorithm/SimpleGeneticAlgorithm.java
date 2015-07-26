@@ -3,10 +3,10 @@ package GeneticAlgorithm;
 import java.util.Random;
 
 public class SimpleGeneticAlgorithm {
-    private int gene_length = 100;
-    private int population_size = 20;
-    private double mutation_rate = 0.02;
-    private double crossover_rate = 0.6;
+    private int geneLength = 100;
+    private int populationSize = 20;
+    private double mutationRate = 0.02;
+    private double crossoverRate = 0.6;
 
     private int[][] genes;
 
@@ -28,40 +28,40 @@ public class SimpleGeneticAlgorithm {
         return values.length - 1;
     }
 
-    public SimpleGeneticAlgorithm(int population_size, int gene_length, double mutation_rate, double crossover_rate,
+    public SimpleGeneticAlgorithm(int populationSize, int geneLength, double mutationRate, double crossoverRate,
                                   Random random) {
-        this.population_size = population_size;
-        this.gene_length = gene_length;
-        this.mutation_rate = mutation_rate;
-        this.crossover_rate = crossover_rate;
+        this.populationSize = populationSize;
+        this.geneLength = geneLength;
+        this.mutationRate = mutationRate;
+        this.crossoverRate = crossoverRate;
         this.random = random;
     }
 
-    public SimpleGeneticAlgorithm(int population_size, int gene_length, double mutation_rate, double crossover_rate) {
-        this(population_size, gene_length, mutation_rate, crossover_rate, new Random());
+    public SimpleGeneticAlgorithm(int populationSize, int geneLength, double mutationRate, double crossoverRate) {
+        this(populationSize, geneLength, mutationRate, crossoverRate, new Random());
     }
 
     public void setGenes(int[][] newGenes) {
         // deep copy
-        genes = new int[population_size][gene_length];
-        for (int i = 0; i < population_size; i++) {
+        genes = new int[populationSize][geneLength];
+        for (int i = 0; i < populationSize; i++) {
             genes[i] = newGenes[i].clone();
         }
     }
 
     public int[][] getGenes() {
         // deep copy
-        int[][] result = new int[population_size][gene_length];
-        for (int i = 0; i < population_size; i++) {
+        int[][] result = new int[populationSize][geneLength];
+        for (int i = 0; i < populationSize; i++) {
             result[i] = genes[i].clone();
         }
         return result;
     }
 
     public void randomInitialize() {
-        genes = new int[population_size][gene_length];
-        for (int i = 0; i < population_size; i++) {
-            for (int j = 0; j < gene_length; j++) {
+        genes = new int[populationSize][geneLength];
+        for (int i = 0; i < populationSize; i++) {
+            for (int j = 0; j < geneLength; j++) {
                 genes[i][j] = random.nextInt(2);
             }
         }
@@ -76,7 +76,7 @@ public class SimpleGeneticAlgorithm {
     }
 
     public void select(int[] fitnesses) {
-        int[][] result = new int[genes.length][gene_length];
+        int[][] result = new int[genes.length][geneLength];
 
         for (int i = 0; i < genes.length; i++) {
             int selected = weightedSample(fitnesses);
@@ -88,12 +88,12 @@ public class SimpleGeneticAlgorithm {
 
     public void crossover() {
         for (int i = 0; i < genes.length; i += 2) {
-            if (random.nextDouble() > crossover_rate) {
+            if (random.nextDouble() > crossoverRate) {
                 continue;
             }
 
-            int point = random.nextInt(gene_length);
-            for (int j = point; j < gene_length; j++) {
+            int point = random.nextInt(geneLength);
+            for (int j = point; j < geneLength; j++) {
                 int tmp = genes[i][j];
                 genes[i][j] = genes[i + 1][j];
                 genes[i + 1][j] = tmp;
@@ -104,7 +104,7 @@ public class SimpleGeneticAlgorithm {
     public void mutate() {
         for (int i = 0; i < genes.length; i++) {
             for (int j = 0; j < genes[i].length; j++) {
-                if (random.nextDouble() < mutation_rate) {
+                if (random.nextDouble() < mutationRate) {
                     // TODO: 対立遺伝子の獲得を外部に出す
                     switch (genes[i][j]) {
                         case 0:
