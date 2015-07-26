@@ -3,4 +3,4 @@
 /out/
 .idea/
 
-*.log
+log_*
