@@ -24,15 +24,13 @@ public class Main {
     private int action_span = 3;
     private int gene_pair_size = 3;
 
+    private int[] fitnesses = new int[population_size];
     private int[] slipTimes;
 
     private int tickCount = 0;
     private boolean fast_mode = false;
 
-    private int gene_index = 0;
     private int generation = 0;
-
-    private int[] fitnesses = new int[population_size];
 
     private KeyAdapter keyAdapter = new KeyAdapter() {
         @Override
@@ -54,6 +52,18 @@ public class Main {
         infoMap.put("CameraX", Float.toString(canvas.getShiftX()));
         infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
         frame.redraw(infoMap, world);
+    }
+
+    private void changeAction(int action_index) {
+        int[][] genes = ga.getGenes();
+        int gene_index = action_index * gene_pair_size;
+
+        for (int i = 0; i < population_size; i++) {
+            int armSpeed = genes[i][gene_index] == 0 ? -1 : 1;
+            int shoulderSpeed = genes[i][gene_index + 1] == 0 ? -1 : 1;
+            int footSpeed = genes[i][gene_index + 2] == 0 ? -1 : 1;
+            world.setIndividualMove(i, armSpeed * 2, shoulderSpeed, footSpeed * 2);
+        }
     }
 
     public Main() {
@@ -93,19 +103,9 @@ public class Main {
             redraw();
         }
 
-        int[][] genes = ga.getGenes();
         tickCount += 1;
         if (tickCount % action_span == 0) {
-            for (int i = 0; i < population_size; i++) {
-                int armSpeed = genes[i][gene_index] == 0 ? -1 : 1;
-                int shoulderSpeed = genes[i][gene_index + 1] == 0 ? -1 : 1;
-                int footSpeed = genes[i][gene_index + 2] == 0 ? -1 : 1;
-                world.setIndividualMove(i, armSpeed * 2, shoulderSpeed, footSpeed * 2);
-            }
-            gene_index += gene_pair_size;
-            if(gene_index >= gene_length){
-                gene_index = 0;
-            }
+            changeAction(tickCount / action_span);
 
             // set slip time
             for(int i = 0; i < population_size; i++) {
@@ -115,7 +115,7 @@ public class Main {
             }
         }
 
-        if(tickCount > action_span * gene_length / gene_pair_size) {
+        if (tickCount > action_span * gene_length / gene_pair_size) {
             tickCount = 0;
             generation += 1;
 
@@ -132,6 +132,7 @@ public class Main {
             }
 
             // save log
+            int[][] genes = ga.getGenes();
             for (int i = 0; i < population_size; i++) {
                 storage.save(generation, fitnesses[i], genes[i]);
             }
