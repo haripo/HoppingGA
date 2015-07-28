@@ -19,8 +19,8 @@ public class Main {
     private HashMap<String, String> infoMap = new HashMap<>();
 
     private final int geneLength = 300;
-    private final int populationSize = 10;
-    private final double mutationRate = 0.02;
+    private final int populationSize = 50;
+    private final double mutationRate = 0.01;
     private final double crossoverRate = 0.6;
 
     private final int actionSpan = 3;
@@ -98,7 +98,7 @@ public class Main {
         simulator.step(1);
         tick += 1;
 
-        if (!fastMode || tick % 20 == 0) {
+        if (!fastMode || tick == generationSpan) {
             redraw();
         }
 

@@ -92,8 +92,9 @@ public class SimpleGeneticAlgorithm {
                 continue;
             }
 
-            int point = random.nextInt(geneLength);
-            for (int j = point; j < geneLength; j++) {
+            int begin = random.nextInt(geneLength);
+            int end = begin + random.nextInt(geneLength - begin);
+            for (int j = begin; j < end; j++) {
                 int tmp = genes[i][j];
                 genes[i][j] = genes[i + 1][j];
                 genes[i + 1][j] = tmp;

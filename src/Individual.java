@@ -28,7 +28,8 @@ public class Individual {
     }
 
     public int getFitness() {
-        return model.getDistance() + slipTime * 100;
+        //System.out.println("Distance: " + model.getDistance() + "  slip: " + slipTime);
+        return model.getDistance() / 10 + slipTime;
     }
 
     public void step(int tick) {
