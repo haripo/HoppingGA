@@ -174,7 +174,7 @@ public class IndividualModel {
             PrismaticJointDef jointDef = new PrismaticJointDef();
             jointDef.bodyA = bodyBody;
             jointDef.bodyB = footBody;
-            jointDef.localAnchorA.set(0f, 1.1f);
+            jointDef.localAnchorA.set(0f, 0.7f);
             jointDef.localAnchorB.set(0f, -0.1f);
             jointDef.localAxisA.set(0, 1);
             jointDef.collideConnected = true;
