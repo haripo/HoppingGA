@@ -11,8 +11,8 @@ public class Canvas extends JComponent implements CanvasInterface {
     private Image buffer;
 
     private float scale = 40f;
-    private float shiftX = 3f;
-    private float shiftY = 3f;
+    private float shiftX = 5f;
+    private float shiftY = 10f;
 
     private Color[] colors = {
             Color.black,

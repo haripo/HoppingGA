@@ -38,7 +38,7 @@ public class PhysicsSimulator {
         groundFixtureDef.filter.categoryBits = 0x0001;
 
         BodyDef groundBodyDef = new BodyDef();
-        groundBodyDef.position = new Vec2(0.0f, 11.0f);
+        groundBodyDef.position = new Vec2(0.0f, 3f);
         groundBodyDef.angle = 0.0f;
         groundBodyDef.type = BodyType.STATIC;
 

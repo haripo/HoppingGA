@@ -72,7 +72,7 @@ public class Main {
         }
         simulator.draw(canvas);
         canvas.drawInfoString(infoMap);
-        canvas.drawLine(-20, 9.5f, 20, 9.5f, 1);
+        canvas.drawLine(-20, 1.5f, 20, 1.5f, 1);
         canvas.repaint();
     }
 

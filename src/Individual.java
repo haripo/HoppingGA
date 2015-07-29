@@ -17,7 +17,7 @@ public class Individual {
     public static int genePairLength = 2;
 
     private boolean getIsSlipped() {
-        return model.getHeadHeight() > 9.5f || model.getHandPositionY() > 9.5f;
+        return model.getHeadHeight() > 1.5f || model.getHandPositionY() > 1.5f;
     }
 
     public Individual(PhysicsSimulator simulator, int[] gene, int actionSpan) {
