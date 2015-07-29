@@ -51,17 +51,32 @@ public class Main {
             individuals[i] = new Individual(simulator, genes[i], actionSpan);
             simulator.addModel(individuals[i].getModel());
         }
+
+        if (generation > 0) {
+            individuals[0].setAsElite();
+        }
     }
 
     private void redraw() {
         Canvas canvas = frame.getCanvas();
+
         infoMap.put("Tick", Integer.toString(tick));
         infoMap.put("Generation", Integer.toString(generation));
         infoMap.put("FastMode", Boolean.toString(fastMode));
         infoMap.put("Scale", Float.toString(canvas.getScale()));
         infoMap.put("CameraX", Float.toString(canvas.getShiftX()));
         infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
-        frame.redraw(infoMap, simulator);
+
+        canvas.fill();
+        simulator.draw(canvas);
+        canvas.drawInfoString(infoMap);
+        canvas.drawLine(-20, 9.5f, 20, 9.5f, 1);
+
+        for (int i = individuals.length - 1; i >= 0; i--) {
+            individuals[i].draw(canvas);
+        }
+
+        canvas.repaint();
     }
 
     public Main() {
@@ -115,10 +130,6 @@ public class Main {
                 float distanceFactor = target.getDistance() / 50.0f;
                 float slipTimeFactor = target.getSlipTime() / (float)generationSpan;
                 fitnesses[i] = distanceFactor + slipTimeFactor;
-
-//                System.out.println("--");
-//                System.out.println(slipTimeFactor);
-//                System.out.println(distanceFactor);
             }
 
             // save log

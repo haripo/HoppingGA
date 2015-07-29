@@ -1,5 +1,7 @@
 import Physics.IndividualModel;
+import Physics.ModelRenderer;
 import Physics.PhysicsSimulator;
+import Physics.CanvasInterface;
 
 public class Individual {
     private IndividualModel model;
@@ -8,6 +10,7 @@ public class Individual {
 
     private int actionSpan;
 
+    private boolean elite = false;
     private int actionIndex = 0;
     private int slipTime = 0;
 
@@ -25,6 +28,10 @@ public class Individual {
 
     public IndividualModel getModel() {
         return model;
+    }
+
+    public void setAsElite() {
+        elite = true;
     }
 
     public int getSlipTime() {
@@ -45,5 +52,17 @@ public class Individual {
             model.setArmSpeed(gene[actionIndex * 2]);
             model.setFootSpeed(gene[actionIndex * 2 + 1]);
         }
+    }
+
+    public void draw(CanvasInterface canvas) {
+        int color = 0;
+        if (elite) {
+            color = 3;
+        } else if (slipTime != 0) {
+            color = 1;
+        }
+
+        ModelRenderer.RenderBodies(model.getBodies(), color, canvas);
+        ModelRenderer.RenderJoints(model.getJoints(), color, canvas);
     }
 }

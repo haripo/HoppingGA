@@ -43,12 +43,4 @@ public class MainFrame extends JFrame {
 
         addKeyListener(keyAdapter);
     }
-
-    public void redraw(Map<String, String> debugInfo, PhysicsSimulator world) {
-        canvas.fill();
-        world.draw(canvas);
-        canvas.drawInfoString(debugInfo);
-        canvas.drawLine(-20, 9.5f, 20, 9.5f);
-        canvas.repaint();
-    }
 }

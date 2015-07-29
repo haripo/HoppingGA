@@ -13,6 +13,9 @@ public class PhysicsSimulator {
 
     private ArrayList<IndividualModel> individuals = new ArrayList<>();
 
+    private Body groundBody;
+    private Fixture groundFixture;
+
     public PhysicsSimulator() {
         initWorld();
     }
@@ -26,19 +29,21 @@ public class PhysicsSimulator {
         world = new World(gravity);
 
         // ground
-        FixtureDef groundFixture = new FixtureDef();
+        FixtureDef groundFixtureDef = new FixtureDef();
         PolygonShape groundShape = new PolygonShape();
         groundShape.setAsBox(20f, 0.1f);
-        groundFixture.shape = groundShape;
-        groundFixture.density = 25.0f;
-        groundFixture.filter = new Filter();
-        groundFixture.filter.categoryBits = 0x0001;
+        groundFixtureDef.shape = groundShape;
+        groundFixtureDef.density = 25.0f;
+        groundFixtureDef.filter = new Filter();
+        groundFixtureDef.filter.categoryBits = 0x0001;
 
-        BodyDef groundBody = new BodyDef();
-        groundBody.position = new Vec2(0.0f, 11.0f);
-        groundBody.angle = 0.0f;
-        groundBody.type = BodyType.STATIC;
-        world.createBody(groundBody).createFixture(groundFixture);
+        BodyDef groundBodyDef = new BodyDef();
+        groundBodyDef.position = new Vec2(0.0f, 11.0f);
+        groundBodyDef.angle = 0.0f;
+        groundBodyDef.type = BodyType.STATIC;
+
+        groundBody = world.createBody(groundBodyDef);
+        groundFixture = groundBody.createFixture(groundFixtureDef);
     }
 
     public void addModel(IndividualModel model) {
@@ -53,51 +58,9 @@ public class PhysicsSimulator {
         individuals.clear();
     }
 
-    public void draw(Renderer canvas) {
+    public void draw(CanvasInterface canvas) {
         canvas.fill();
-
-        Body body = world.getBodyList();
-        while (body != null) {
-            Transform transform = new Transform(
-                    body.getWorldCenter(),
-                    new Rot(body.getAngle()));
-            Fixture fixture = body.getFixtureList();
-            while (fixture != null) {
-                switch (fixture.getType()) {
-                    case CIRCLE: {
-                        CircleShape shape = (CircleShape) fixture.getShape();
-                        Vec2 vertex = Transform.mul(transform, shape.getVertex(0));
-                        canvas.drawCircle(vertex.x, vertex.y, shape.m_radius);
-                        break;
-                    }
-                    case POLYGON: {
-                        PolygonShape shape = (PolygonShape) fixture.getShape();
-                        int vertexCount = shape.getVertexCount();
-                        for (int i = 0; i < vertexCount; i++) {
-                            int j = (i + 1) % vertexCount;
-                            Vec2 vertexA = Transform.mul(transform, shape.getVertex(i));
-                            Vec2 vertexB = Transform.mul(transform, shape.getVertex(j));
-                            canvas.drawLine(vertexA.x, vertexA.y, vertexB.x, vertexB.y);
-                        }
-                        break;
-                    }
-                }
-                fixture = fixture.getNext();
-            }
-            body = body.getNext();
-        }
-
-        Joint joint = world.getJointList();
-        while (joint != null) {
-            Vec2 anchorA = new Vec2();
-            Vec2 anchorB = new Vec2();
-            joint.getAnchorA(anchorA);
-            joint.getAnchorB(anchorB);
-            canvas.drawCircle(anchorA.x, anchorA.y, 0.1f);
-            canvas.drawCircle(anchorB.x, anchorB.y, 0.1f);
-            canvas.drawLine(anchorA.x, anchorA.y, anchorB.x, anchorB.y);
-            joint = joint.getNext();
-        }
+        ModelRenderer.RenderBody(groundBody, 0, canvas);
     }
 
     public void step(int step_speed) {

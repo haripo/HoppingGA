@@ -13,15 +13,16 @@ public class IndividualModel {
     private ArrayList<Joint> joints = new ArrayList<>();
     private ArrayList<Body> bodies = new ArrayList<>();
 
-    private Fixture headFixture;
     private Body boardBody;
     private Body handBody;
+
+    private Fixture headFixture;
+    public Fixture bodyFixture;
 
     private PrismaticJoint shoulderArmJoint;
     private PrismaticJoint bodyFootJoint;
     private RevoluteJoint shoulderBodyJoint;
 
-    public Fixture bodyFixture;
 
     public IndividualModel(World world) {
         Filter fixture_filter = new Filter();

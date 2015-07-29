@@ -1,16 +1,27 @@
 
+import Physics.CanvasInterface;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Map;
 
 import javax.swing.JComponent;
 
-public class Canvas extends JComponent implements Physics.Renderer {
+public class Canvas extends JComponent implements CanvasInterface {
     private Image buffer;
 
     private float scale = 40f;
     private float shiftX = 3f;
     private float shiftY = 3f;
+
+    private Color[] colors = {
+            Color.black,
+            Color.lightGray,
+            Color.red,
+            Color.blue,
+            Color.green,
+            Color.yellow,
+    };
 
     private Graphics getBufferGraphics() {
         Graphics2D graphics = (Graphics2D) buffer.getGraphics();
@@ -74,8 +85,9 @@ public class Canvas extends JComponent implements Physics.Renderer {
         graphics.fillRect(0, 0, getWidth(), getHeight());
     }
 
-    public void drawCircle(float x, float y, float r) {
+    public void drawCircle(float x, float y, float r, int color) {
         Graphics graphics = getBufferGraphics();
+        graphics.setColor(colors[color]);
         graphics.drawArc(
                 Math.round((x - r + shiftX) * scale),
                 Math.round((y - r + shiftY) * scale),
@@ -84,8 +96,9 @@ public class Canvas extends JComponent implements Physics.Renderer {
                 0, 360);
     }
 
-    public void drawLine(float x1, float y1, float x2, float y2) {
+    public void drawLine(float x1, float y1, float x2, float y2, int color) {
         Graphics graphics = getBufferGraphics();
+        graphics.setColor(colors[color]);
         graphics.drawLine(
                 Math.round((x1 + shiftX) * scale), Math.round((y1 + shiftY) * scale),
                 Math.round((x2 + shiftX) * scale), Math.round((y2 + shiftY) * scale));
@@ -93,6 +106,7 @@ public class Canvas extends JComponent implements Physics.Renderer {
 
     public void drawInfoString(Map<String, String> info) {
         Graphics graphics = getBufferGraphics();
+        graphics.setColor(colors[0]);
         FontMetrics fontMetrics = graphics.getFontMetrics();
         int lineHeight = fontMetrics.getAscent();
         int y = 15;
