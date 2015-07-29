@@ -16,7 +16,6 @@ public class Main {
     private Individual[] individuals;
 
     private SimpleGeneticAlgorithm ga;
-    private GeneStorage storage;
 
     private HashMap<String, String> infoMap = new HashMap<>();
 
@@ -88,11 +87,6 @@ public class Main {
 
         individuals = new Individual[populationSize];
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'_'HHmmss");
-        String logFilename = String.format("log_%s.csv", dateFormat.format(new Date()));
-        storage = new GeneStorage(logFilename);
-        infoMap.put("Log", logFilename);
-
         simulator = new PhysicsSimulator();
 
         createIndividuals();
@@ -122,6 +116,7 @@ public class Main {
             tick = 0;
             generation += 1;
 
+            // calc fitnesses
             float[] fitnesses = new float[populationSize];
             for (int i = 0; i < fitnesses.length; i++) {
                 Individual target = individuals[i];
@@ -129,12 +124,6 @@ public class Main {
                 float slipTimeFactor = target.getSlipTime() / (float)generationSpan;
                 fitnesses[i] = distanceFactor + slipTimeFactor;
             }
-
-            // save log
-//            int[][] genes = ga.getGenes();
-//            for (int i = 0; i < populationSize; i++) {
-//                storage.save(generation, fitnesses[i], genes[i]);
-//            }
 
             // create next generation
             ga.generateNext(fitnesses);
