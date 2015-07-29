@@ -62,7 +62,7 @@ public class PhysicsSimulator {
         ModelRenderer.RenderBody(groundBody, 0, canvas);
     }
 
-    public void step(int step_speed) {
-        world.step(1.0f / 30.0f * step_speed, 10, 10);
+    public void step(float step_speed) {
+        world.step(step_speed, 10, 10);
     }
 }

@@ -109,7 +109,7 @@ public class Main {
     }
 
     public void step() {
-        simulator.step(1);
+        simulator.step(20 / 1000f);
         tick += 1;
 
         if (!fastMode || tick == generationSpan) {
