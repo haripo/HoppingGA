@@ -59,7 +59,6 @@ public class PhysicsSimulator {
     }
 
     public void draw(CanvasInterface canvas) {
-        canvas.fill();
         ModelRenderer.RenderBody(groundBody, 0, canvas);
     }
 

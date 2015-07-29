@@ -68,14 +68,12 @@ public class Main {
         infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
 
         canvas.fill();
-        simulator.draw(canvas);
-        canvas.drawInfoString(infoMap);
-        canvas.drawLine(-20, 9.5f, 20, 9.5f, 1);
-
         for (int i = individuals.length - 1; i >= 0; i--) {
             individuals[i].draw(canvas);
         }
-
+        simulator.draw(canvas);
+        canvas.drawInfoString(infoMap);
+        canvas.drawLine(-20, 9.5f, 20, 9.5f, 1);
         canvas.repaint();
     }
 
