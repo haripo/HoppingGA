@@ -1,9 +1,6 @@
-import Physics.PhysicsSimulator;
-
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Map;
 
 public class MainFrame extends JFrame {
     private Canvas canvas;

@@ -57,7 +57,7 @@ public class Individual {
     public void draw(CanvasInterface canvas) {
         int color = 0;
         if (elite) {
-            color = 3;
+            color = 2;
         } else if (slipTime != 0) {
             color = 1;
         }

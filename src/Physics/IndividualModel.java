@@ -13,16 +13,17 @@ public class IndividualModel {
     private ArrayList<Joint> joints = new ArrayList<>();
     private ArrayList<Body> bodies = new ArrayList<>();
 
+    private Body bodyBody;
     private Body boardBody;
     private Body handBody;
+    private Body shoulderBody;
+    private Body footBody;
 
     private Fixture headFixture;
-    public Fixture bodyFixture;
 
     private PrismaticJoint shoulderArmJoint;
     private PrismaticJoint bodyFootJoint;
     private RevoluteJoint shoulderBodyJoint;
-
 
     public IndividualModel(World world) {
         Filter fixture_filter = new Filter();
@@ -30,7 +31,6 @@ public class IndividualModel {
         fixture_filter.maskBits = 0x0001;
 
         // body
-        Body bodyBody;
         {
             PolygonShape shape = new PolygonShape();
             shape.setAsBox(0.1f, 1.2f);
@@ -56,11 +56,10 @@ public class IndividualModel {
             bodyDef.angle = 0.0f;
             bodyDef.type = BodyType.DYNAMIC;
 
-            Body boxBody = world.createBody(bodyDef);
-            bodyFixture = boxBody.createFixture(fixtureDef);
-            headFixture = boxBody.createFixture(headFixtureDef);
-            bodies.add(boxBody);
-            bodyBody = boxBody;
+            bodyBody = world.createBody(bodyDef);
+            bodyBody.createFixture(fixtureDef);
+            headFixture = bodyBody.createFixture(headFixtureDef);
+            bodies.add(bodyBody);
         }
 
         // hand
@@ -70,13 +69,12 @@ public class IndividualModel {
 
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.shape = shape;
+            fixtureDef.filter = fixture_filter;
             fixtureDef.density = 20.0f;
             fixtureDef.friction = 40.0f;
-            fixtureDef.filter = fixture_filter;
 
             BodyDef bodyDef = new BodyDef();
             bodyDef.position = new Vec2(2.2f, 1.3f);
-            bodyDef.angle = 0.0f;
             bodyDef.type = BodyType.DYNAMIC;
 
             handBody = world.createBody(bodyDef);
@@ -85,49 +83,43 @@ public class IndividualModel {
         }
 
         // foot
-        Body footBody;
         {
             PolygonShape shape = new PolygonShape();
             shape.setAsBox(0.1f, 0.2f);
 
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.shape = shape;
+            fixtureDef.filter = fixture_filter;
             fixtureDef.density = 20.0f;
             fixtureDef.friction = 40.0f;
-            fixtureDef.filter = fixture_filter;
 
             BodyDef bodyDef = new BodyDef();
             bodyDef.position = new Vec2(2.0f, 1.3f);
-            bodyDef.angle = 0.0f;
             bodyDef.type = BodyType.DYNAMIC;
 
-            Body boxBody = world.createBody(bodyDef);
-            boxBody.createFixture(fixtureDef);
-            bodies.add(boxBody);
-            footBody = boxBody;
+            footBody = world.createBody(bodyDef);
+            footBody.createFixture(fixtureDef);
+            bodies.add(footBody);
         }
 
         // shoulder
-        Body shoulderBody;
         {
             PolygonShape shape = new PolygonShape();
             shape.setAsBox(0.2f, 0.1f);
 
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.shape = shape;
+            fixtureDef.filter = fixture_filter;
             fixtureDef.density = 20.0f;
             fixtureDef.friction = 40.0f;
-            fixtureDef.filter = fixture_filter;
 
             BodyDef bodyDef = new BodyDef();
             bodyDef.position = new Vec2(2.0f, 1.3f);
-            bodyDef.angle = 0.0f;
             bodyDef.type = BodyType.DYNAMIC;
 
-            Body boxBody = world.createBody(bodyDef);
-            boxBody.createFixture(fixtureDef);
-            bodies.add(boxBody);
-            shoulderBody = boxBody;
+            shoulderBody = world.createBody(bodyDef);
+            shoulderBody.createFixture(fixtureDef);
+            bodies.add(shoulderBody);
         }
 
         // board
@@ -181,7 +173,7 @@ public class IndividualModel {
             jointDef.enableMotor = true;
             jointDef.maxMotorForce = 1000f;
             jointDef.enableLimit = true;
-            jointDef.upperTranslation = 2;
+            jointDef.upperTranslation = 1;
             jointDef.lowerTranslation = 0;
             bodyFootJoint = (PrismaticJoint) world.createJoint(jointDef);
             joints.add(bodyFootJoint);
@@ -239,7 +231,7 @@ public class IndividualModel {
     }
 
     public float getDistance() {
-        return bodies.get(0).getPosition().x;
+        return footBody.getPosition().x;
     }
 
     public float getHeadHeight() {
