@@ -1,5 +1,5 @@
 
-import GeneticAlgorithm.SimpleGeneticAlgorithm;
+import GeneticAlgorithm.GeneticAlgorithm;
 import junit.framework.*;
 
 import java.util.Arrays;
@@ -7,14 +7,16 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class SimpleGeneticAlgorithmTest extends TestCase {
-    public SimpleGeneticAlgorithmTest(String name) {
+public class GeneticAlgorithmTest extends TestCase {
+    private Random random;
+
+    public GeneticAlgorithmTest(String name) {
         super(name);
+        random = new Random(1);
     }
 
     public void testSelection() {
-        Random random = new Random();
-        SimpleGeneticAlgorithm target = new SimpleGeneticAlgorithm(3, 3, 0, 0, random);
+        GeneticAlgorithm target = new GeneticAlgorithm(3, 3, 0, 0, random);
 
         int[][] genes = {
                 { 1, 2, 3 },
@@ -33,7 +35,7 @@ public class SimpleGeneticAlgorithmTest extends TestCase {
     }
 
     public void testCrossover() {
-        SimpleGeneticAlgorithm target = new SimpleGeneticAlgorithm(2, 3, 0, 1);
+        GeneticAlgorithm target = new GeneticAlgorithm(2, 3, 0, 1, random);
         int[][] genes = {
                 { 1, 1, 1 },
                 { 2, 2, 2 },
@@ -52,7 +54,7 @@ public class SimpleGeneticAlgorithmTest extends TestCase {
     }
 
     public void testMutation() {
-        SimpleGeneticAlgorithm target = new SimpleGeneticAlgorithm(2, 3, 1, 0);
+        GeneticAlgorithm target = new GeneticAlgorithm(2, 3, 1, 0, random);
         int[][] genes = {
                 { 1, 0, 1 },
                 { 0, 1, 0 },
@@ -62,12 +64,12 @@ public class SimpleGeneticAlgorithmTest extends TestCase {
         target.mutate();
         int[][] result = target.getGenes();
 
-        assertArrayEquals(new int[]{0, 1, 0}, result[0]);
-        assertArrayEquals(new int[]{1, 0, 1}, result[1]);
+        assertFalse(Arrays.equals(genes[0], result[0]));
+        assertFalse(Arrays.equals(genes[1], result[1]));
     }
 
     public void testGetElite() {
-        SimpleGeneticAlgorithm target = new SimpleGeneticAlgorithm(2, 3, 1, 0);
+        GeneticAlgorithm target = new GeneticAlgorithm(2, 3, 1, 0, random);
         int[][] genes = {
                 { 1, 2, 3 },
                 { 2, 3, 4 },
@@ -82,7 +84,7 @@ public class SimpleGeneticAlgorithmTest extends TestCase {
     }
 
     public void testSetElite() {
-        SimpleGeneticAlgorithm target = new SimpleGeneticAlgorithm(3, 3, 1, 0);
+        GeneticAlgorithm target = new GeneticAlgorithm(3, 3, 1, 0, random);
         int[][] genes = {
                 { 1, 2, 3 },
                 { 2, 3, 4 },

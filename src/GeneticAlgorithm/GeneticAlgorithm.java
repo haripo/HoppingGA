@@ -2,7 +2,7 @@ package GeneticAlgorithm;
 
 import java.util.Random;
 
-public class SimpleGeneticAlgorithm {
+public class GeneticAlgorithm {
     private int geneLength = 100;
     private int populationSize = 20;
     private double mutationRate = 0.02;
@@ -14,27 +14,12 @@ public class SimpleGeneticAlgorithm {
 
     private Random random;
 
-    private int weightedSample(float[] values) {
-        float sum = 0;
-        for (float value : values) {
-            sum += value;
-        }
-
-        double threshold = random.nextDouble() * sum;
-        for (int i = 0; i < values.length; i++) {
-            threshold -= values[i];
-            if(threshold <= 0) return i;
-        }
-
-        return values.length - 1;
-    }
-
     private int getRandomGene() {
         return geneOption[random.nextInt(geneOption.length)];
     }
 
-    public SimpleGeneticAlgorithm(int populationSize, int geneLength, double mutationRate, double crossoverRate,
-                                  Random random) {
+    public GeneticAlgorithm(int populationSize, int geneLength, double mutationRate, double crossoverRate,
+                            Random random) {
         this.populationSize = populationSize;
         this.geneLength = geneLength;
         this.mutationRate = mutationRate;
@@ -42,7 +27,7 @@ public class SimpleGeneticAlgorithm {
         this.random = random;
     }
 
-    public SimpleGeneticAlgorithm(int populationSize, int geneLength, double mutationRate, double crossoverRate) {
+    public GeneticAlgorithm(int populationSize, int geneLength, double mutationRate, double crossoverRate) {
         this(populationSize, geneLength, mutationRate, crossoverRate, new Random());
     }
 
@@ -103,8 +88,8 @@ public class SimpleGeneticAlgorithm {
                 continue;
             }
 
-            int begin = random.nextInt(geneLength);
-            int end = begin + random.nextInt(geneLength - begin);
+            int begin = random.nextInt(geneLength - 1);
+            int end = begin + random.nextInt(geneLength - begin - 1) + 1;
             for (int j = begin; j < end; j++) {
                 int tmp = genes[i][j];
                 genes[i][j] = genes[i + 1][j];
@@ -117,7 +102,10 @@ public class SimpleGeneticAlgorithm {
         for (int i = 0; i < genes.length; i++) {
             for (int j = 0; j < genes[i].length; j++) {
                 if (random.nextDouble() < mutationRate) {
-                    genes[i][j] = getRandomGene();
+                    int originalGene = genes[i][j];
+                    while (genes[i][j] == originalGene) {
+                        genes[i][j] = getRandomGene();
+                    }
                 }
             }
         }

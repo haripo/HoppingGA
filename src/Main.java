@@ -1,12 +1,8 @@
-import GeneticAlgorithm.SimpleGeneticAlgorithm;
+import GeneticAlgorithm.GeneticAlgorithm;
 import Physics.PhysicsSimulator;
-import com.sun.deploy.util.ArrayUtil;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 
 public class Main {
@@ -15,7 +11,7 @@ public class Main {
     private PhysicsSimulator simulator;
     private Individual[] individuals;
 
-    private SimpleGeneticAlgorithm ga;
+    private GeneticAlgorithm ga;
 
     private HashMap<String, String> infoMap = new HashMap<>();
 
@@ -89,7 +85,7 @@ public class Main {
         frame = new MainFrame();
         frame.addKeyListener(keyAdapter);
 
-        ga = new SimpleGeneticAlgorithm(populationSize, geneLength, mutationRate, crossoverRate);
+        ga = new GeneticAlgorithm(populationSize, geneLength, mutationRate, crossoverRate);
         ga.randomInitialize();
 
         generationSpan = (geneLength / Individual.genePairLength) * actionSpan;
