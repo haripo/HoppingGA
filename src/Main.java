@@ -31,13 +31,17 @@ public class Main {
     private int generation = 0;
 
     private boolean fastMode = false;
+    private boolean eliteMode = false;
 
     private KeyAdapter keyAdapter = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
-                case KeyEvent.VK_SPACE:
+                case KeyEvent.VK_A:
                     fastMode = !fastMode;
+                    break;
+                case KeyEvent.VK_S:
+                    eliteMode = !eliteMode;
                     break;
             }
         }
@@ -61,14 +65,19 @@ public class Main {
 
         infoMap.put("Tick", Integer.toString(tick));
         infoMap.put("Generation", Integer.toString(generation));
-        infoMap.put("FastMode", Boolean.toString(fastMode));
+        infoMap.put("FastMode (a key)", Boolean.toString(fastMode));
+        infoMap.put("EliteMode (s key)", Boolean.toString(eliteMode));
         infoMap.put("Scale", Float.toString(canvas.getScale()));
         infoMap.put("CameraX", Float.toString(canvas.getShiftX()));
         infoMap.put("CameraY", Float.toString(canvas.getShiftY()));
 
         canvas.fill();
-        for (int i = individuals.length - 1; i >= 0; i--) {
-            individuals[i].draw(canvas);
+        if(eliteMode) {
+            individuals[0].draw(canvas);
+        } else {
+            for (int i = individuals.length - 1; i >= 0; i--) {
+                individuals[i].draw(canvas);
+            }
         }
         simulator.draw(canvas);
         canvas.drawInfoString(infoMap);
