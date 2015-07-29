@@ -21,7 +21,7 @@ public class SimpleGeneticAlgorithmTest extends TestCase {
                 { 2, 3, 4 },
                 { 0, 1, 2 },
         };
-        int[] fitnesses = { 1, 0, 0 };
+        float[] fitnesses = { 1, 0, 0 };
 
         target.setGenes(genes);
         target.select(fitnesses);
@@ -73,7 +73,7 @@ public class SimpleGeneticAlgorithmTest extends TestCase {
                 { 2, 3, 4 },
                 { 4, 5, 6 },
         };
-        int[] fitnesses = { 1, 2, 1 };
+        float[] fitnesses = { 1, 2, 1 };
 
         target.setGenes(genes);
         int[] result = target.getElite(fitnesses);

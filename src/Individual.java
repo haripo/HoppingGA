@@ -27,9 +27,12 @@ public class Individual {
         return model;
     }
 
-    public int getFitness() {
-        //System.out.println("Distance: " + model.getDistance() + "  slip: " + slipTime);
-        return model.getDistance() / 10 + slipTime;
+    public int getSlipTime() {
+        return slipTime;
+    }
+
+    public float getDistance() {
+        return model.getDistance();
     }
 
     public void step(int tick) {
@@ -39,11 +42,8 @@ public class Individual {
 
         if (tick % actionSpan == 0) {
             actionIndex += 1;
-
-            int armSpeed = gene[actionIndex * 2] == 0 ? -1 : 1;
-            int footSpeed = gene[actionIndex * 2 + 1] == 0 ? -1 : 1;
-            model.setArmSpeed(armSpeed);
-            model.setFootSpeed(footSpeed);
+            model.setArmSpeed(gene[actionIndex * 2]);
+            model.setFootSpeed(gene[actionIndex * 2 + 1]);
         }
     }
 }

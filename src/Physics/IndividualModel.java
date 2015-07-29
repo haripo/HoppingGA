@@ -194,8 +194,6 @@ public class IndividualModel {
             jointDef.localAnchorA.set(-0.1f, 0);
             jointDef.localAnchorB.set(0f, -0.5f);
             jointDef.collideConnected = false;
-            jointDef.enableMotor = true;
-            jointDef.maxMotorTorque = 100f;
             shoulderBodyJoint = (RevoluteJoint) world.createJoint(jointDef);
             joints.add(shoulderBodyJoint);
         }
@@ -231,10 +229,6 @@ public class IndividualModel {
         return joints;
     }
 
-    public void setShoulderAngleSpeed(float speed) {
-        //shoulderBodyJoint.setMotorSpeed(speed);
-    }
-
     public void setArmSpeed(float speed) {
         shoulderArmJoint.setMotorSpeed(speed);
     }
@@ -243,12 +237,8 @@ public class IndividualModel {
         bodyFootJoint.setMotorSpeed(speed);
     }
 
-    public int getDistance() {
-        return (int)(bodies.get(0).getPosition().x * 100);
-    }
-
-    public int getHeight() {
-        return (int)(bodies.get(0).getPosition().y);
+    public float getDistance() {
+        return bodies.get(0).getPosition().x;
     }
 
     public float getHeadHeight() {

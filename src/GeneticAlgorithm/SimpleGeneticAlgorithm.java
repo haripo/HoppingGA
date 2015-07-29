@@ -10,12 +10,13 @@ public class SimpleGeneticAlgorithm {
 
     private int[][] genes;
 
+    private int[] geneOption = { -3, -2, -1, 0, 1, 2, 3 };
+
     private Random random;
 
-    private int weightedSample(int[] values) {
-        // TODO: divide normalize function
-        double sum = 0;
-        for (int value : values) {
+    private int weightedSample(float[] values) {
+        float sum = 0;
+        for (float value : values) {
             sum += value;
         }
 
@@ -26,6 +27,10 @@ public class SimpleGeneticAlgorithm {
         }
 
         return values.length - 1;
+    }
+
+    private int getRandomGene() {
+        return geneOption[random.nextInt(geneOption.length)];
     }
 
     public SimpleGeneticAlgorithm(int populationSize, int geneLength, double mutationRate, double crossoverRate,
@@ -62,12 +67,12 @@ public class SimpleGeneticAlgorithm {
         genes = new int[populationSize][geneLength];
         for (int i = 0; i < populationSize; i++) {
             for (int j = 0; j < geneLength; j++) {
-                genes[i][j] = random.nextInt(2);
+                genes[i][j] = getRandomGene();
             }
         }
     }
 
-    public void generateNext(int[] fitnesses) {
+    public void generateNext(float[] fitnesses) {
         int[] elite = getElite(fitnesses);
         select(fitnesses);
         crossover();
@@ -75,11 +80,17 @@ public class SimpleGeneticAlgorithm {
         setElite(elite);
     }
 
-    public void select(int[] fitnesses) {
+    public void select(float[] fitnesses) {
         int[][] result = new int[genes.length][geneLength];
 
         for (int i = 0; i < genes.length; i++) {
-            int selected = weightedSample(fitnesses);
+            int selected = 0;
+            for (int j = 0; j < 16; j++) {
+                int target = random.nextInt(genes.length);
+                if (fitnesses[target] > fitnesses[selected]) {
+                    selected = target;
+                }
+            }
             result[i] = genes[selected].clone();
         }
 
@@ -106,21 +117,13 @@ public class SimpleGeneticAlgorithm {
         for (int i = 0; i < genes.length; i++) {
             for (int j = 0; j < genes[i].length; j++) {
                 if (random.nextDouble() < mutationRate) {
-                    // TODO: 対立遺伝子の獲得を外部に出す
-                    switch (genes[i][j]) {
-                        case 0:
-                            genes[i][j] = 1;
-                            break;
-                        case 1:
-                            genes[i][j] = 0;
-                            break;
-                    }
+                    genes[i][j] = getRandomGene();
                 }
             }
         }
     }
 
-    public int[] getElite(int[] fitnesses) {
+    public int[] getElite(float[] fitnesses) {
         int best = 0;
         for (int i = 1; i < fitnesses.length; i++) {
             if (fitnesses[i] > fitnesses[best]) {

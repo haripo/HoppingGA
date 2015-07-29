@@ -1,9 +1,11 @@
 import GeneticAlgorithm.SimpleGeneticAlgorithm;
 import Physics.PhysicsSimulator;
+import com.sun.deploy.util.ArrayUtil;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -107,16 +109,23 @@ public class Main {
             tick = 0;
             generation += 1;
 
-            int[] fitnesses = new int[populationSize];
+            float[] fitnesses = new float[populationSize];
             for (int i = 0; i < fitnesses.length; i++) {
-                fitnesses[i] = individuals[i].getFitness();
+                Individual target = individuals[i];
+                float distanceFactor = target.getDistance() / 50.0f;
+                float slipTimeFactor = target.getSlipTime() / (float)generationSpan;
+                fitnesses[i] = distanceFactor + slipTimeFactor;
+
+//                System.out.println("--");
+//                System.out.println(slipTimeFactor);
+//                System.out.println(distanceFactor);
             }
 
             // save log
-            int[][] genes = ga.getGenes();
-            for (int i = 0; i < populationSize; i++) {
-                storage.save(generation, fitnesses[i], genes[i]);
-            }
+//            int[][] genes = ga.getGenes();
+//            for (int i = 0; i < populationSize; i++) {
+//                storage.save(generation, fitnesses[i], genes[i]);
+//            }
 
             // create next generation
             ga.generateNext(fitnesses);
