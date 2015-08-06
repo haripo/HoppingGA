@@ -4,6 +4,8 @@ import Physics.PhysicsSimulator;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Main {
     private MainFrame frame;
@@ -13,7 +15,7 @@ public class Main {
 
     private GeneticAlgorithm ga;
 
-    private HashMap<String, String> infoMap = new HashMap<>();
+    private Map<String, String> infoMap = new LinkedHashMap<>();
 
     private final int geneLength = 300;
     private final int populationSize = 50;
