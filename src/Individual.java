@@ -13,6 +13,7 @@ public class Individual {
     private boolean elite = false;
     private int actionIndex = 0;
     private int slipTime = 0;
+    private int cumulativeDistance = 0;
 
     public static int genePairLength = 2;
 
@@ -38,14 +39,16 @@ public class Individual {
         return slipTime;
     }
 
-    public float getDistance() {
-        return model.getDistance();
+    public float getCumulativeDistance() {
+        return cumulativeDistance;
     }
 
     public void step(int tick) {
         if(getIsSlipped() && slipTime == 0) {
             slipTime = tick;
         }
+
+        cumulativeDistance += model.getDistance();
 
         if (tick % actionSpan == 0) {
             actionIndex += 1;

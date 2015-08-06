@@ -3,7 +3,6 @@ import Physics.PhysicsSimulator;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -127,9 +126,9 @@ public class Main {
             float[] fitnesses = new float[populationSize];
             for (int i = 0; i < fitnesses.length; i++) {
                 Individual target = individuals[i];
-                float distanceFactor = target.getDistance() / 50.0f;
+                float distanceFactor = target.getCumulativeDistance() / (float)generationSpan;
                 float slipTimeFactor = target.getSlipTime() / (float)generationSpan;
-                fitnesses[i] = distanceFactor + slipTimeFactor;
+                fitnesses[i] = distanceFactor / 20.0f + slipTimeFactor;
             }
 
             // create next generation
