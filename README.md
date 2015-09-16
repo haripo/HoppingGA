@@ -11,9 +11,10 @@ Learn how to play hopping (= pogo stick) by genetic algorithm.
 ## Genetic Algorithm
 
 A gene is implemented as an integer array.
-Its (2*n)-th element represents stretch speed of the model's arm,
-and (2*n+1)-th element represents stretch speed of him/her leg.
-I defined fitness as (how long the model stands + how far the model moves).
+Its (2n)-th element represents stretch speed of the model's arm,
+and (2n+1)-th element represents stretch speed of him/her leg.
+I defined fitness as how long the model stands + how far the model moves.
+
 
  | gene length      | 300          |
  | crossover rate   | 0.6          |
